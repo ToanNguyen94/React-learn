@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<title>Gif-Giphy</title>
+</head>
+
+<body>
+	<div class="container">
+		<input type="text" onkeyup="inputValue(this)" placeholder="Nhập tên muốn tìm">
+		<input type="submit" onclick="search()" value="Tìm kiếm">
+		<input type="submit" onclick="del()" value="Xóa">
+		<div id="result"></div>
+	</div>
+
+
+	<script>
+		let result = document.getElementById( 'result' );
+		let url = 'https://api.giphy.com/v1/gifs/search';
+		let gifArr = [];
+		let keyword;
+
+		function inputValue( obj ) {
+			keyword = obj.value;
+			// console.log( keyword );
+		}
+		function search() {
+			requestData( keyword );
+		}
+
+
+		function requestData( keyword ) {
+			axios.get( url, {
+				params: {
+					q: keyword,
+					api_key: 'gW72jLvicsBTgP706BIhkPCbTeCGGCZf',
+				}
+			} )
+				// .then( ( result ) => console.log( result ) )
+				.then( ( result ) => { gifArr.push( result.data.data[ 1 ][ 'images' ][ 'preview_gif' ].url ); } )
+				.catch( error => console.log( error ) )
+				.then( () => displayData() );
+		}
+
+		function displayData() {
+			let html = '';
+			gifArr.map( imageGif => {
+				html += '<img src="' + imageGif + '" width="300" height="300">';
+			} );
+			result.innerHTML = html;
+		}
+	</script>
+</body>
+
+</html>
